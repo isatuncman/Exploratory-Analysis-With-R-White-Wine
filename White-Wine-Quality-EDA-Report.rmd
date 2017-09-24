@@ -1,14 +1,8 @@
 # Exploratory Data Analysis: White Wine Quality by ISA TUNCMAN
 ========================================================
 
-> **Tip**: You will see quoted sections like this throughout the template to
-help you construct your report. Make sure that you remove these notes before
-you finish and submit your project!
 
-> **Tip**: One of the requirements of this project is that your code follows
-good formatting techniques, including limiting your lines to 80 characters or
-less. If you're using RStudio, go into Preferences \> Code \> Display to set up
-a margin line to help you keep track of this guideline!
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 library(ggplot2)
@@ -26,32 +20,365 @@ library(knitr)
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
-df = read.csv('wineQualityWhites.csv')
+df = read.csv('wineQualityWhites.csv', header = T, row.names = 1)
 ```
 
-> **Tip**: Before you create any plots, it is a good idea to provide a short
-introduction into the dataset that you are planning to explore. Replace this
-quoted text with that general information!
+# Introduction to dataset
+
+'White Wine Quality' is a tidy dataset contains 4,898 white wines with 11 variables on quantifying the chemical properties of each wine. At least 3 wine experts rated the quality of each wine, providing a rating between 0 (very bad) and 10 (very excellent).
+
+## The variables in the dataset are listed as below:
+
+```{r echo=FALSE, Names}
+names(df)
+```
+
+   1 - fixed acidity (tartaric acid - g / dm^3)
+   2 - volatile acidity (acetic acid - g / dm^3)
+   3 - citric acid (g / dm^3)
+   4 - residual sugar (g / dm^3)
+   5 - chlorides (sodium chloride - g / dm^3
+   6 - free sulfur dioxide (mg / dm^3)
+   7 - total sulfur dioxide (mg / dm^3)
+   8 - density (g / cm^3)
+   9 - pH
+   10 - sulphates (potassium sulphate - g / dm3)
+   11 - alcohol (% by volume)
+   12 - quality (score between 0 and 10)
+
+## My primary an overriding research question is : Which chemical properties influence the quality of white wines?
+
+In this stduy, I will make __exploratory data analysis__ to understand the data before the inferential stastics tests are applied.
+
 
 
 # Univariate Plots Section
 
-> **Tip**: In this section, you should perform some preliminary exploration of
-your dataset. Run some summaries of the data and create univariate plots to
-understand the structure of the individual variables in your dataset. Don't
-forget to add a comment after each plot or closely-related group of plots!
-There should be multiple code chunks and text sections; the first one below is
-just to help you get started.
+The structure of the data:
 
-```{r echo=FALSE, Univariate_Plots}
+```{r echo = False, Structure_of_Data}
+str(df)
+```
+
+All of the variables are numbers and there exist no factor type in the dataset. 
+
+```{r echo= FALSE, Summary_of_Data}
+summary(df)
 
 ```
 
-> **Tip**: Make sure that you leave a blank line between the start / end of
-each code block and the end / start of your Markdown text so that it is
-formatted nicely in the knitted text. Note as well that text on consecutive
-lines is treated as a single space. Make sure you have a blank line between
-your paragraphs so that they too are formatted for easy readability.
+Quality values are between 3 and 9. Median and Mean is very close to each other which means the distribution is not so-skewed. Lets start with the distribution of the quality outputs.
+ 
+ 
+
+```{r echo=FALSE, Univariate_Plots1}
+ggplot(aes(x = quality), data = df) + geom_histogram(binwidth = 1) + scale_y_continuous(breaks = seq(0,2250,250)) + scale_x_continuous(limits = c(3,10), breaks = seq(3,9,1))
+
+```
+
+The quality of the wines are mostly cumulated at value of 6. There exist very few wines having quality score of 9. Since it is scale, there exist no decimal values.
+
+Let's investigate other variables and their distributions.
+
+## 1) Fixed.acidity
+```{r echo=FALSE, Univariate_Fixed_Acidity}
+ggplot(aes(x = fixed.acidity), data = df) + 
+  geom_histogram()
+```
+
+
+
+```{r echo=FALSE, Univariate_Fixed_Acidity}
+ggplot(aes(x = fixed.acidity), data = df) + 
+  geom_histogram(binwidth = 0.1) +
+  scale_x_continuous(breaks = seq(0,15,1))
+```
+
+
+The distribution of acidity is very close to normal distribution. But there exist some outliers in the data. 
+
+
+```{r echo=FALSE, Univariate_Fixed_Acidity_Summary}
+summary(df$fixed.acidity)
+```
+It can also  be seen from the summary table that there exist few data points between 3rd Quantile and Max Values.
+
+
+if I trim top 1 percentile, I obtain the below graph which is approximately normal.
+
+```{r echo=FALSE, Univariate_Fixed_Acidity}
+ggplot(aes(x = fixed.acidity), data = df) + 
+  geom_histogram(binwidth = 0.1) +
+  scale_x_continuous(breaks = seq(0,15,1), limits =c(quantile(df$fixed.acidity, 0.01),quantile(df$fixed.acidity, 0.99)))
+```
+
+## 2) Volitile.acidity
+
+```{r echo=FALSE, Univariate_Volatile_Acidity}
+ggplot(aes(x = volatile.acidity), data = df) + 
+  geom_histogram()
+```
+
+
+```{r echo=FALSE, Univariate_Volatile_Acidity}
+ggplot(aes(x = volatile.acidity), data = df) + 
+  geom_histogram(binwidth = 0.01) + scale_x_continuous(breaks = seq(0,1.1, 0.1))
+
+```
+
+```{r echo=FALSE, Univariate_Volatile_Acidity_Summary}
+summary(df$volatile.acidity)
+
+```
+
+In the dataset, there exist extreme data points which make dataset skewed. I should investigate these extreme points and their possible relationship with the quality.
+
+If I trim the top 1 percentile, then I obtain the below graph.
+
+```{r echo=FALSE, Univariate_Volatile_Acidity_Trimmed}
+ggplot(aes(x = volatile.acidity), data = df) + 
+  geom_histogram(binwidth = 0.01) + scale_x_continuous(breaks = seq(0,1.1, 0.1), limits = c(0, quantile(df$volatile.acidity,0.99)))
+
+```
+
+The distribution is still right skewed.
+
+## 3) Citric.acid
+
+```{r echo=FALSE, Univariate_Citric.acid}
+ggplot(aes(x = citric.acid), data = df) + 
+  geom_histogram()
+```
+
+```{r echo=FALSE, Univariate_Citric.acid}
+ggplot(aes(x = citric.acid), data = df) + 
+  geom_histogram(binwidth = 0.01) + scale_x_continuous(breaks = seq(0.1,1.5,0.1))
+```
+It is interesting to see that there exist extreme counts at 0.3, which seems to be peak and at around 0.5. Other than 0.5, the citric acid values has a bell shaped distribution. An extra attention should be given 0.5 point.
+
+```{r echo=FALSE, Univariate_Citric.acid_Summary}
+summary(df$citric.acid)
+
+```
+
+In citric acid values, there also exist extreme high values. If the top 1 percentile is trimmed, I obtain the below graph which is much close to normal-like distribution.:
+
+```{r echo=FALSE, Univariate_Citric.acid}
+ggplot(aes(x = citric.acid), data = df) + 
+  geom_histogram(binwidth = 0.01) + scale_x_continuous(breaks = seq(0.1,1.5,0.1), limits = c(0, quantile(df$citric.acid, 0.99)))
+```
+
+## 4) Residual.sugar
+
+
+```{r echo=FALSE, Residual_Sugar}
+ggplot(aes(x = residual.sugar), data = df) + geom_histogram()
+```
+
+```{r echo=FALSE, Residual_Sugar}
+ggplot(aes(x = residual.sugar), data = df) + geom_histogram(binwidth = 0.1)
+```
+
+
+```{r echo=FALSE, Residual_Sugar_Summary}
+summary(df$residual.sugar)
+```
+
+Residual sugar distribution is highly skewed. There exist very few extremely high values but so many extremely low values.
+
+If the residual.sugar value is log transformed below graph is obtained: 
+
+```{r echo=FALSE, Residual_Sugar}
+ggplot(aes(x = residual.sugar), data = df) + geom_histogram(binwidth = 0.03) + scale_x_log10(breaks = seq(0,10,1)) 
+                                                                          
+```
+
+It is interesting to see that the distribution is bimodal. Therefore, two groups of wines exist. One is sweet (around 10) and one is non-sweet(around 1.5). Most probably, people either prefer sweet or non-sweet wines.
+
+## 5) Chlorides
+
+```{r echo=FALSE, Cholrides_1}
+ggplot(aes(x = chlorides), data = df) + geom_histogram()              
+```
+
+It is difficult to understand the graph using this bin sizes. I should narrow down them, change the x scale to obtain a better visualiztaion. Let's look at the summary table of chlorides variable.
+
+```{r echo=FALSE, Chlorides_Summary}
+summary(df$chlorides)     
+
+```
+
+
+
+```{r echo=FALSE, Cholorides_2}
+ggplot(aes(x = chlorides), data = df) + geom_histogram(binwidth = 0.001) + scale_x_continuous(breaks)  
+
+```
+The distribution is good but the spread of data is wide. If I omit top 1 percent of data:
+
+```{r echo=FALSE, Cholorides_3}
+ggplot(aes(x = chlorides), data = df) + geom_histogram(binwidth = 0.001) + scale_x_continuous(limits = c(0, quantile(df$chlorides, 0.99)))  
+
+```
+
+Although most of the data points are clustered around 0.05 (3rd quartile), there exist considerable amount of data above 0.05. Let's log transfrom the data to obtain a better insight.
+
+```{r echo=FALSE, Cholorides_3}
+ggplot(aes(x = chlorides), data = df) + geom_histogram(binwidth = 0.01) +  scale_x_log10() 
+
+```
+
+The distribution of data stays the same. Large amount of data is cumulated around 0.5 and there exist a spread of data having value grater than 0.10
+
+## 6) Free.sulfur.dioxide
+
+```{r echo=FALSE, free.sulfur.dioxide}
+ggplot(aes(x = free.sulfur.dioxide), data = df) + geom_histogram()              
+```
+
+Lets arrange binwidths to obtain deeper insight.
+
+```{r echo=FALSE, free.sulfur.dioxide}
+ggplot(aes(x = free.sulfur.dioxide), data = df) + geom_histogram(binwidth = 1)              
+```
+
+If we look also the summary statistics:
+
+```{r echo=FALSE, free.sulfur.dioxide_summary}
+
+summary(df$free.sulfur.dioxide)
+```
+
+There exist extremely large variables similar to other variables. If the top 1 percentile is omitted:
+
+```{r echo=FALSE, free.sulfur.dioxide}
+ggplot(aes(x = free.sulfur.dioxide), data = df) + geom_histogram(binwidth = 1) + scale_x_continuous(limits = c(0, quantile(df$free.sulfur.dioxide,0.99)))
+```
+
+This time, the distribution is quite better and similar to normal. We can see that only very small amount of data have extreme values. The skewness in the data is very low.
+
+## 7) Total.sulfur.dioxide
+
+```{r echo=FALSE, total.sulfur.dioxide}
+ggplot(aes(x = total.sulfur.dioxide), data = df) + geom_histogram()              
+```
+
+
+```{r echo=FALSE, total.sulfur.dioxide_Summary}
+summary(df$total.sulfur.dioxide)
+```
+
+The data follows a pattern similar to previous variables. There exist extremely large variables but most of the data has a bell-shaped normal-like distribution. If the top 1 percentile is omitted the below distribution is obtained.
+
+
+```{r echo=FALSE, total.sulfur.dioxide_2}
+ggplot(aes(x = total.sulfur.dioxide), data = df) + 
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(limits = c(0, quantile(df$total.sulfur.dioxide, 0.99)))
+```
+
+Most of the data values are between 50 and 240.
+
+
+
+## 8) Density
+
+```{r echo=FALSE, density}
+ggplot(aes(x = density), data = df) + geom_histogram()              
+```
+
+
+```{r echo=FALSE, density}
+summary(df$density)              
+```
+The spread of density seems very narrow. Let's use smaller bin sizes:
+
+```{r echo=FALSE, density}
+ggplot(aes(x = density), data = df) + geom_histogram(binwidth = 0.0001)              
+```
+
+Most density values are between 0.98 and 1. There exist also a few extreme values. Lets omit the top 1 percentile.
+
+```{r echo=FALSE, density}
+ggplot(aes(x = density), data = df) + geom_histogram(binwidth = 0.0001) +
+  scale_x_continuous(limits = c(0.9871, quantile(df$density, 0.99)))
+```
+
+The most of the density data are cumulated between 0.990 and 0.997
+
+## 9) pH
+
+```{r echo=FALSE, pH}
+ggplot(aes(x = pH), data = df) + geom_histogram()              
+```
+
+The data distribution seems bell-shaped and there are no extreme values. If the bin size is narowed:
+
+```{r echo=FALSE, pH}
+ggplot(aes(x = pH), data = df) + geom_histogram(binwidth = 0.01)              
+```
+
+
+```{r echo=FALSE, pH}
+summary(df$pH)              
+```
+There is ignorable skewness in the data set and the spread is quite narrow.
+
+
+## 10) Sulphate
+
+```{r echo=FALSE, sulphate}
+ggplot(aes(x = sulphates), data = df) + geom_histogram()              
+```
+
+The data seem to be right skewed. Let's narrow the bin sizes.
+
+```{r echo=FALSE, sulphate}
+ggplot(aes(x = sulphates), data = df) + geom_histogram(binwidth = 0.01)              
+```
+
+```{r echo=FALSE, sulphate}
+summary(df$sulphates)
+```
+
+
+If the top 1 percentile is ommited:
+
+```{r echo=FALSE, sulphate}
+ggplot(aes(x = sulphates), data = df) +
+  geom_histogram(binwidth = 0.01) +
+  scale_x_continuous(limits = c(0.22, quantile(df$sulphates, 0.99)))
+```
+
+There exist still some right-skewness in the data but very close to bell-shaped distribution.
+
+
+## 11) Alcohol
+
+```{r echo=FALSE, sulphate}
+ggplot(aes(x = alcohol), data = df) + geom_histogram()
+  
+```
+
+```{r echo=FALSE, sulphate}
+ggplot(aes(x = alcohol), data = df) + geom_histogram(binwidth = 0.1) + scale_x_continuous(breaks = seq(8, 14,1)) 
+  
+```
+
+
+```{r echo=FALSE, sulphate}
+summary(df$alcohol)
+```
+
+The distribution seems to be multi- modal. These are (8.5 - 10), (10-11.5) and
+(11.5-13). The biggest group is (8.5-10) group. If the data is log transformed:
+
+```{r echo=FALSE, sulphate}
+ggplot(aes(x = alcohol), data = df) + geom_histogram(binwidth = 0.005) + scale_x_log10()
+  
+```
+
+There exist most data at the point 9.5. Nearly twice of the other peaks.
 
 # Univariate Analysis
 
