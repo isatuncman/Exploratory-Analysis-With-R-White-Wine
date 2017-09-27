@@ -807,6 +807,8 @@ Alcohol and total.sulfur dioxide graph showed a relatively strong relationship a
 ### What was the strongest relationship you found?
 The strongest relationship was found between alcohol and density variables as expected.
 
+
+
 # Multivariate Plots Section
 
 > **Tip**: Now it's time to put everything together. Based on what you found in
