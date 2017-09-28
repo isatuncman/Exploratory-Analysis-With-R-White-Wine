@@ -733,7 +733,7 @@ ggplot(aes(x = quality, y = alcohol), data = df) + geom_boxplot(aes(group = qual
 ggplot(aes(x = quality, y = residual.sugar), data = df) + geom_boxplot(aes(group = quality)) + ylim(quantile(df$residual.sugar,0.01), quantile(df$residual.sugar,0.99))
 ```
 
-Low and high quality wines include similar amount of sugar.
+Low and high quality wines include similar amount of sugar and the data points are quite volitile. It is difficult to detect a clear pattern.
 
 
 ```{r echo=FALSE, density_sugar_BoxPlot}
@@ -811,27 +811,98 @@ The strongest relationship was found between alcohol and density variables as ex
 
 # Multivariate Plots Section
 
-> **Tip**: Now it's time to put everything together. Based on what you found in
-the bivariate plots section, create a few multivariate plots to investigate
-more complex interactions between variables. Make sure that the plots that you
-create here are justified by the plots you explored in the previous section. If
-you plan on creating any mathematical models, this is the section where you
-will do that.
 
-```{r echo=FALSE, Multivariate_Plots}
-
+```{r echo=FALSE, Multivariate_alcohol_residual.sugar_1}
+df$quality_grouped <- cut(df$quality, c(2,4,7,9))
+ggplot(aes(x = alcohol, y = residual.sugar), data = df) +
+  geom_point(aes(color = quality_grouped), stat = 'summary', fun.y = mean)
 ```
 
-# Multivariate Analysis
 
-### Talk about some of the relationships you observed in this part of the \
-investigation. Were there features that strengthened each other in terms of \
-looking at your feature(s) of interest?
+When I add quality_grouped into alcohol-residual.sugar I observe that high-quality (blue points) wines generally have high level alcohol. 
+
+Another important implication of the graph is that high quality wines generally have low residual.sugar level (less than 5). However, low level of sugar does not mean high quality wines. There exist so many wine types which are low quality and includes low residual.sugar.
+
+
+```{r echo=FALSE, Multivariate_alcohol_density_1}
+df$quality_grouped <- cut(df$quality, c(2,4,7,9))
+ggplot(aes(x = alcohol, y = density), data = df) +
+  geom_point(aes(color = quality_grouped), stat = 'summary', fun.y = mean)
+```
+
+
+From the above graph, it can be observed that most low quality wines are composed of low alcohol and high density and most high quality wines are composed of low denisty and high alcohol level. The medium quality wines are dispersed all over the graph.
+
+```{r echo=FALSE, Multivariate_alcohol_citric_acid_1}
+ggplot(aes(x = alcohol, y = citric.acid), data = df) +
+  ylim(quantile(df$citric.acid, 0.01), quantile(df$citric.acid, 0.99)) +
+  geom_point(aes(color = quality_grouped), stat = 'summary', fun.y = mean)
+```
+
+```{r echo=FALSE, _citric_acid_summary}
+summary(df$citric.acid)
+summary(df$alcohol)
+```
+
+It can be clearly seen that high quality wines mostly have more that median citric acid level. To be more clear, high quality wines are distributed between median and 3rd quantile citric.acid values.
+Nearly none of the high quality wine producers produced wines with low citric acid values.
+
+
+```{r echo=FALSE, Multivariate_alcohol_citric_acid_1}
+df$alcohol_grouped <- cut(df$alcohol, c(7.99,9.50,10.50, 11.50, 14.20))
+
+ggplot(aes(x = volatile.acidity, y = quality), data =df) +
+  geom_line(aes(color = alcohol_grouped), stat = 'summary', fun.y = mean, alpha =0.8) 
+```
+
+
+The graph implies that high quality wines have high level alcohol and low level volatile acidity. An important implication is that the quality difference coditional on alcohol becomes more significant when volitile acidity increases.
+
+
+```{r echo=FALSE, Multivariate_alcohol_citric_acid_1}
+
+ggplot(aes(x = chlorides, y = quality), data =df) +
+  xlim(0,quantile(df$chlorides,0.99)) +
+  geom_point(aes(color = alcohol_grouped), stat = 'summary', fun.y = mean, alpha =0.8) 
+```
+
+There exist a negative relationship between quality and cholorides. Low cholorides and high alcohol level shows a good quality measure.
+
+```{r echo=FALSE, Multivariate_alcohol_citric_acid_1}
+
+ggplot(aes(x = total.sulfur.dioxide, y = quality), data =df) +
+  xlim(quantile(df$total.sulfur.dioxide, 0.01), quantile(df$total.sulfur.dioxide, 0.99)) +
+  geom_point(aes(color = alcohol_grouped), stat = 'summary', fun.y = mean, alpha =0.8) 
+```
+
+High quality wines are generally cumulated below total.sulfur.dioxide value of 150.
+
+
+
+```{r echo=FALSE, Multivariate_alcohol_citric_acid_1}
+
+ggplot(aes(x = alcohol_grouped , y = volatile.acidity), data =df) +
+  geom_boxplot() 
+```
+
+
+
+
+
+# Multivariate Analysis
+In multivariate analysis, quality and alcohol values are grouped and factorized to add one more dimension into visualization. 
+
+
+### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
+
+High quality wines were found to have high level of alcohol, low level of residual.sugar, low density, high citric acid, low cholorides, low sulfur dioxided and low volatile acidity.
+
+The third dimension increased the quality of visualiation and pattern detection. Since the relationships were generally non-linear, grouping of alchohol and quality values provided further insight into the graphs and analysis. I was expecting 'taste clusters' in the dataset and I was able to find these clusters for high quality and low quality wines.
+
+The medium quality wine faeture values are generally dispersed all over the data. Therefore, further analysis should be conducted to find detect detailed patterns.
 
 ### Were there any interesting or surprising interactions between features?
-
-### OPTIONAL: Did you create any models with your dataset? Discuss the \
-strengths and limitations of your model.
+Alcohol residual.sugar interaction was surprising. High level of alcohol wines included low level of residual sugar, contrary to my expectations.
 
 ------
 
