@@ -10,11 +10,6 @@ library(dplyr)
 library(knitr)
 
 
-
-# The other parameters for "message" and "warning" should also be set to FALSE
-# for other code chunks once you have verified that each plot comes out as you
-# want it to. This will clean up the flow of your report.
-
 ```
 
 
@@ -56,7 +51,7 @@ In this stduy, I will make __exploratory data analysis__ to understand the data 
 
 The structure of the data:
 
-```{r echo = False, Structure_of_Data}
+```{r echo = FALSE, Structure_of_Data}
 str(df)
 ```
 
@@ -88,7 +83,7 @@ ggplot(aes(x = fixed.acidity), data = df) +
 
 
 
-```{r echo=FALSE, Univariate_Fixed_Acidity}
+```{r echo=FALSE, Univariate_Fixed_Acidity2}
 ggplot(aes(x = fixed.acidity), data = df) + 
   geom_histogram(binwidth = 0.1) +
   scale_x_continuous(breaks = seq(0,15,1))
@@ -106,7 +101,7 @@ It can also  be seen from the summary table that there exist few data points bet
 
 if I trim top 1 percentile, I obtain the below graph which is approximately normal.
 
-```{r echo=FALSE, Univariate_Fixed_Acidity}
+```{r echo=FALSE, Univariate_Fixed_Acidity3}
 ggplot(aes(x = fixed.acidity), data = df) + 
   geom_histogram(binwidth = 0.1) +
   scale_x_continuous(breaks = seq(0,15,1), limits =c(quantile(df$fixed.acidity, 0.01),quantile(df$fixed.acidity, 0.99)))
@@ -114,13 +109,13 @@ ggplot(aes(x = fixed.acidity), data = df) +
 
 ## 2) Volitile.acidity
 
-```{r echo=FALSE, Univariate_Volatile_Acidity}
+```{r echo=FALSE, Univariate_Volatile_Acidity1}
 ggplot(aes(x = volatile.acidity), data = df) + 
   geom_histogram()
 ```
 
 
-```{r echo=FALSE, Univariate_Volatile_Acidity}
+```{r echo=FALSE, Univariate_Volatile_Acidity2}
 ggplot(aes(x = volatile.acidity), data = df) + 
   geom_histogram(binwidth = 0.01) + scale_x_continuous(breaks = seq(0,1.1, 0.1))
 
@@ -145,12 +140,12 @@ The distribution is still right skewed.
 
 ## 3) Citric.acid
 
-```{r echo=FALSE, Univariate_Citric.acid}
+```{r echo=FALSE, Univariate_Citric.acid1}
 ggplot(aes(x = citric.acid), data = df) + 
   geom_histogram()
 ```
 
-```{r echo=FALSE, Univariate_Citric.acid}
+```{r echo=FALSE, Univariate_Citric.acid2}
 ggplot(aes(x = citric.acid), data = df) + 
   geom_histogram(binwidth = 0.01) + scale_x_continuous(breaks = seq(0.1,1.5,0.1))
 ```
@@ -163,12 +158,12 @@ summary(df$citric.acid)
 
 In citric acid values, there also exist extreme high values. If the top 1 percentile is trimmed, I obtain the below graph which is much close to normal-like distribution.:
 
-```{r echo=FALSE, Univariate_Citric.acid}
+```{r echo=FALSE, Univariate_Citric.acid3}
 ggplot(aes(x = citric.acid), data = df) + 
   geom_histogram(binwidth = 0.01) + scale_x_continuous(breaks = seq(0.1,1.5,0.1), limits = c(0, quantile(df$citric.acid, 0.99)))
 ```
 
-```{r}
+```{r echo=FALSE, citric_acid_table}
 table(df$citric.acid)
 ```
 
@@ -178,11 +173,11 @@ table(df$citric.acid)
 ## 4) Residual.sugar
 
 
-```{r echo=FALSE, Residual_Sugar}
+```{r echo=FALSE, Residual_Sugar1}
 ggplot(aes(x = residual.sugar), data = df) + geom_histogram()
 ```
 
-```{r echo=FALSE, Residual_Sugar}
+```{r echo=FALSE, Residual_Sugar_2}
 ggplot(aes(x = residual.sugar), data = df) + geom_histogram(binwidth = 0.1)
 ```
 
@@ -195,14 +190,14 @@ Residual sugar distribution is highly skewed. There exist very few extremely hig
 
 If the residual.sugar value is log transformed below graph is obtained: 
 
-```{r echo=FALSE, Residual_Sugar}
+```{r echo=FALSE, Residual_Sugar3}
 ggplot(aes(x = residual.sugar), data = df) + geom_histogram(binwidth = 0.03) + scale_x_log10(breaks = seq(0,10,1)) 
                                                                           
 ```
 
 It is interesting to see that the distribution is bimodal. Therefore, two groups of wines exist. One is sweet (around 10) and one is non-sweet(around 1.5). Most probably, people either prefer sweet or non-sweet wines.
 
-```{r}
+```{r echo=FALSE, Residual_Sugar4}
 table(df$residual.sugar)
 ```
 
@@ -235,14 +230,14 @@ ggplot(aes(x = chlorides), data = df) + geom_histogram(binwidth = 0.001) + scale
 
 Although most of the data points are clustered around 0.05 (3rd quartile), there exist considerable amount of data above 0.05. Let's log transfrom the data to obtain a better insight.
 
-```{r echo=FALSE, Cholorides_3}
+```{r echo=FALSE, Cholorides_4}
 ggplot(aes(x = chlorides), data = df) + geom_histogram(binwidth = 0.01) +  scale_x_log10() 
 
 ```
 
 The distribution of data stays the same. Large amount of data is cumulated around 0.5 and there exist a spread of data having value grater than 0.10
 
-```{r}
+```{r echo=FALSE, Cholorides_5}
 table(df$chlorides)
 ```
 
@@ -250,26 +245,26 @@ There exist several data points above 0.01 and these data points have large spre
 
 ## 6) Free.sulfur.dioxide
 
-```{r echo=FALSE, free.sulfur.dioxide}
+```{r echo=FALSE, free.sulfur.dioxide1}
 ggplot(aes(x = free.sulfur.dioxide), data = df) + geom_histogram()              
 ```
 
 Lets arrange binwidths to obtain deeper insight.
 
-```{r echo=FALSE, free.sulfur.dioxide}
+```{r echo=FALSE, free.sulfur.dioxide2}
 ggplot(aes(x = free.sulfur.dioxide), data = df) + geom_histogram(binwidth = 1)              
 ```
 
 If we look also the summary statistics:
 
-```{r echo=FALSE, free.sulfur.dioxide_summary}
+```{r echo=FALSE, free.sulfur.dioxide_summary3}
 
 summary(df$free.sulfur.dioxide)
 ```
 
 There exist extremely large variables similar to other variables. If the top 1 percentile is omitted:
 
-```{r echo=FALSE, free.sulfur.dioxide}
+```{r echo=FALSE, free.sulfur.dioxide4}
 ggplot(aes(x = free.sulfur.dioxide), data = df) + geom_histogram(binwidth = 1) + scale_x_continuous(limits = c(0, quantile(df$free.sulfur.dioxide,0.99)))
 ```
 
@@ -277,7 +272,7 @@ This time, the distribution is quite better and similar to normal. We can see th
 
 ## 7) Total.sulfur.dioxide
 
-```{r echo=FALSE, total.sulfur.dioxide}
+```{r echo=FALSE, total.sulfur.dioxide1}
 ggplot(aes(x = total.sulfur.dioxide), data = df) + geom_histogram()              
 ```
 
@@ -289,7 +284,7 @@ summary(df$total.sulfur.dioxide)
 The data follows a pattern similar to previous variables. There exist extremely large variables but most of the data has a bell-shaped normal-like distribution. If the top 1 percentile is omitted the below distribution is obtained.
 
 
-```{r echo=FALSE, total.sulfur.dioxide_2}
+```{r echo=FALSE, total.sulfur.dioxide_last}
 ggplot(aes(x = total.sulfur.dioxide), data = df) + 
   geom_histogram(binwidth = 1) +
   scale_x_continuous(limits = c(0, quantile(df$total.sulfur.dioxide, 0.99)))
@@ -301,23 +296,23 @@ Most of the data values are between 50 and 240.
 
 ## 8) Density
 
-```{r echo=FALSE, density}
+```{r echo=FALSE, density1}
 ggplot(aes(x = density), data = df) + geom_histogram()              
 ```
 
 
-```{r echo=FALSE, density}
+```{r echo=FALSE, density2}
 summary(df$density)              
 ```
 The spread of density seems very narrow. Let's use smaller bin sizes:
 
-```{r echo=FALSE, density}
+```{r echo=FALSE, density3}
 ggplot(aes(x = density), data = df) + geom_histogram(binwidth = 0.0001)              
 ```
 
 Most density values are between 0.98 and 1. There exist also a few extreme values. Lets omit the top 1 percentile.
 
-```{r echo=FALSE, density}
+```{r echo=FALSE, density4}
 ggplot(aes(x = density), data = df) + geom_histogram(binwidth = 0.0001) +
   scale_x_continuous(limits = c(0.9871, quantile(df$density, 0.99)))
 ```
@@ -326,18 +321,18 @@ The most of the density data are cumulated between 0.990 and 0.997
 
 ## 9) pH
 
-```{r echo=FALSE, pH}
+```{r echo=FALSE, pH1}
 ggplot(aes(x = pH), data = df) + geom_histogram()              
 ```
 
 The data distribution seems bell-shaped and there are no extreme values. If the bin size is narowed:
 
-```{r echo=FALSE, pH}
+```{r echo=FALSE, pH2}
 ggplot(aes(x = pH), data = df) + geom_histogram(binwidth = 0.01)              
 ```
 
 
-```{r echo=FALSE, pH}
+```{r echo=FALSE, pH3}
 summary(df$pH)              
 ```
 There is ignorable skewness in the data set and the spread is quite narrow.
@@ -345,24 +340,24 @@ There is ignorable skewness in the data set and the spread is quite narrow.
 
 ## 10) Sulphate
 
-```{r echo=FALSE, sulphate}
+```{r echo=FALSE, sulphate1}
 ggplot(aes(x = sulphates), data = df) + geom_histogram()              
 ```
 
 The data seem to be right skewed. Let's narrow the bin sizes.
 
-```{r echo=FALSE, sulphate}
+```{r echo=FALSE, sulphate2}
 ggplot(aes(x = sulphates), data = df) + geom_histogram(binwidth = 0.01)              
 ```
 
-```{r echo=FALSE, sulphate}
+```{r echo=FALSE, sulphate3}
 summary(df$sulphates)
 ```
 
 
 If the top 1 percentile is ommited:
 
-```{r echo=FALSE, sulphate}
+```{r echo=FALSE, sulphate4}
 ggplot(aes(x = sulphates), data = df) +
   geom_histogram(binwidth = 0.01) +
   scale_x_continuous(limits = c(0.22, quantile(df$sulphates, 0.99)))
@@ -373,32 +368,32 @@ There exist still some right-skewness in the data but very close to bell-shaped 
 
 ## 11) Alcohol
 
-```{r echo=FALSE, sulphate}
+```{r echo=FALSE, alcohol1}
 ggplot(aes(x = alcohol), data = df) + geom_histogram()
   
 ```
 
-```{r echo=FALSE, sulphate}
+```{r echo=FALSE, alcohol2}
 ggplot(aes(x = alcohol), data = df) + geom_histogram(binwidth = 0.1) + scale_x_continuous(breaks = seq(8, 14,1)) 
   
 ```
 
 
-```{r echo=FALSE, sulphate}
+```{r echo=FALSE, alcohol3}
 summary(df$alcohol)
 ```
 
 The distribution seems to be multi- modal. These are (8.5 - 10), (10-11.5) and
 (11.5-13). The biggest group is (8.5-10) group. If the data is log transformed:
 
-```{r echo=FALSE, sulphate}
+```{r echo=FALSE, alcohol4}
 ggplot(aes(x = alcohol), data = df) + geom_histogram(binwidth = 0.005) + scale_x_log10()
   
 ```
 
 Most data exist at the point 9.5. Nearly twice of the other peaks.
 
-```{r}
+```{r echo=FALSE, alcohol5}
 table(floor(df$alcohol))
 ```
 
@@ -473,16 +468,16 @@ When residual sugar is between 1.5 and 5 the quality is robust and highest mean 
 
 When residual sugar is between 5 and 10, variance in quality is very high and quality mean reaches very high values. However, mean of means is quite low.
 
-```{r echo=FALSE, Bivariate_Alcohol_1}
+```{r echo=FALSE, Bivariate_Alcohol_Quality_1}
 ggplot(aes(x = alcohol, y = quality), data = df) + geom_point()
 ```
 
-```{r echo=FALSE, Bivariate_Alcohol_2}
+```{r echo=FALSE, Bivariate_Alcohol_Quality_2}
 ggplot(aes(x = alcohol, y = quality), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0))
 ```
 
 
-```{r echo=FALSE, Bivariate_Alcohol_3}
+```{r echo=FALSE, Bivariate_Alcohol_Quality_3}
 ggplot(aes(x = alcohol, y = quality), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0),color = 'orange') + geom_line(stat = 'summary', fun.y = mean) + geom_smooth()
 ```
 
@@ -498,29 +493,29 @@ ggplot(aes(x = alcohol, y = quality), data = df) + geom_point(alpha = 0.1, posit
 
 The trimmed model has a better positive linear  relationship between 9.5 and 13. Best robust qualities are reached between 12 and 13 alcohol level.
 
-```{r echo=FALSE}
+```{r echo=FALSE, bivariate_alcohol_5} 
 with(df, cor.test(alcohol, quality, method = 'pearson'))
 
 ```
 
 
-```{r echo=FALSE, Bivariate_Alcohol_1}
+```{r echo=FALSE, Bivariate_Va_1}
 ggplot(aes(x = volatile.acidity, y = quality), data = df) + geom_point()
 ```
 
 
-```{r echo=FALSE, Bivariate_Alcohol_2}
+```{r echo=FALSE, Bivariate_Va_2}
 ggplot(aes(x = volatile.acidity, y = quality), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0))
 ```
 
 
-```{r echo=FALSE, Bivariate_Alcohol_3}
+```{r echo=FALSE, Bivariate_Va_3}
 ggplot(aes(x = volatile.acidity, y = quality), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0),color = 'orange') + geom_line(stat = 'summary', fun.y = mean) + geom_smooth()
 ```
 
 From the graph, it can be seen that there exists a negative relatinship between volitile acidity and quality. Let's investigate the data without extreme points.
 
-```{r echo=FALSE, Bivariate_Volitile.acidity_3}
+```{r echo=FALSE, Bivariate_Volitile.acidity_4}
 ggplot(aes(x = volatile.acidity, y = quality), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0),color = 'orange') + xlim(0.08, quantile(df$volatile.acidity, 0.99)) +
   geom_line(stat = 'summary', fun.y = mean) + geom_smooth()
 
@@ -546,7 +541,7 @@ ggplot(aes(x = free.sulfur.dioxide, y = quality), data = df) + geom_point(alpha 
 
 Quality and free.sulfur.dioxide has a positive relationship between 0 and 30. After 40, mean of means decreases and falls down to quality lecel of 6.
 
-```{r echo=FALSE, total.sulfur.dioxide_1}
+```{r echo=FALSE, total.sulfur.dioxide_2}
 ggplot(aes(x = total.sulfur.dioxide, y = quality), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0), color = 'orange') +
   xlim(quantile(df$free.total.dioxide, 0.01), quantile(df$total.sulfur.dioxide, 0.99)) +
   geom_line(stat= 'summary', fun.y=mean) +
@@ -556,7 +551,7 @@ ggplot(aes(x = total.sulfur.dioxide, y = quality), data = df) + geom_point(alpha
 
 total.sulfur.dioxide seems to have a positive relationship with quality betweeen 0 and 90. The curve's slope becomes negative after 100, but the strenght of relationship is low. It is important to emphasize that quality value is very robust between 75 and 150. For small values of total sulfur dioxide, quality is very volitile.
 
-```{r echo=FALSE, total.sulfur.dioxide_2}
+```{r echo=FALSE, total.sulfur.dioxide_3}
 summary(df$total.sulfur.dioxide)
 ```
 
@@ -612,7 +607,7 @@ It is difficult to say that there exist a relationship between quality and sulph
 We can also look at citric acid, fixed acidity, density and pH relationships.
 
 
-```{r echo=FALSE, citric.acid_1}
+```{r echo=FALSE, bi_citric.acid_1}
 ggplot(aes(x = citric.acid, y = quality), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0), color = 'orange')  + 
   xlim(quantile(df$citric.acid, 0.01), quantile(df$citric.acid, 0.99)) + 
   geom_line(stat='summary', fun.y = mean) + 
@@ -621,7 +616,7 @@ ggplot(aes(x = citric.acid, y = quality), data = df) + geom_point(alpha = 0.1, p
 ```
 
 
-```{r echo=FALSE, bivariate_fixed.acid_1}
+```{r echo=FALSE, bivariate_fixed.acid_2}
 ggplot(aes(x = fixed.acidity, y = quality), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0), color = 'orange')  + 
   xlim(quantile(df$fixed.acidity, 0.01), quantile(df$fixed.acidity, 0.99)) + 
   geom_line(stat='summary', fun.y = mean) + 
@@ -638,7 +633,7 @@ ggplot(aes(x = density, y = quality), data = df) + geom_point(alpha = 0.1, posit
   
 ```
 
-```{r echo=FALSE, }
+```{r echo=FALSE,  bivariate_density_2 }
 with(df, cor.test(density, quality))
 ```
 
@@ -660,7 +655,7 @@ residual.sugar, alcohol, volitile.acidity, total.sulfur.dioxide, citric acid and
 Lets look at  a few variables conditional on alcohol.
 
 
-```{r echo=FALSE, pH_1}
+```{r echo=FALSE, pH_2}
 ggplot(aes(x = alcohol, y = residual.sugar), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0), color = 'orange')  +
   ylim(0, quantile(df$residual.sugar,0.95)) +
   coord_trans(y = 'sqrt') +
@@ -684,7 +679,7 @@ ggplot(aes(x = alcohol, y = volatile.acidity), data = df) + geom_point(alpha = 0
 
 The reltionship shows that for the alcohol value more than 11,  volitile acidity increases.
 
-```{r echo=FALSE, volarile_acidity_vs_alcohol_1}
+```{r echo=FALSE, volarile_acidity_vs_alcohol_2}
 with(subset(df, df$alcohol>11), cor.test(volatile.acidity, alcohol, method = 'pearson'))
 ```
 
@@ -716,14 +711,14 @@ ggplot(aes(x = alcohol, y = density), data = df) + geom_point(alpha = 0.1, posit
 
 
 
-```{r echo= FALSE, density corr}
+```{r echo= FALSE, density_corr}
 with(df, cor.test(alcohol, density, method = 'pearson'))
 ```
 
 Density and alcohol have a strong negative correlation (-0.78) as seen in the above graph and correlation calculation.
 
 
-```{r echo=FALSE, Bivariate_Alcohol_}
+```{r echo=FALSE, Bivariate_Alcohol_1}
 ggplot(aes(x = quality, y = alcohol), data = df) + geom_boxplot(aes(group = quality))
 ```
  High quality wines generally have high alcohol levels. 
@@ -742,7 +737,7 @@ ggplot(aes(x = quality, y = density), data = df) + geom_boxplot(aes(group = qual
 
 High quality wines clearly have low density on average.
 
-```{r echo=FALSE, density_sugar_BoxPlot}
+```{r echo=FALSE, Va_sugar_BoxPlot}
 ggplot(aes(x = quality, y = volatile.acidity), data = df) + geom_boxplot(aes(group = quality)) + ylim(quantile(df$volatile.acidity, 0.01), quantile(df$volatile.acidity, 0.99))
 ```
 It is difficult to detect a trend for high quality wines and volatile acidity when extremes are trimmed.
@@ -761,7 +756,7 @@ ggplot(aes(x = quality, y = total.sulfur.dioxide), data = df) + geom_boxplot(aes
 ggplot(aes(x = quality, y = free.sulfur.dioxide), data = df) + geom_boxplot(aes(group = quality)) + ylim(quantile(df$free.sulfur.dioxide, 0.01), quantile(df$free.sulfur.dioxide, 0.99))
 ```
 
-```{r echo=FALSE, total_sulfur_dioxide_boxplot}
+```{r echo=FALSE, citric_acid_boxplot}
 ggplot(aes(x = quality, y = citric.acid), data = df) + geom_boxplot(aes(group = quality)) + ylim(quantile(df$citric.acid, 0.01), quantile(df$citric.acid, 0.99))
 ```
 Free sulfur dioxide is at similar amounts for different quality levels.
@@ -839,7 +834,7 @@ ggplot(aes(x = alcohol, y = citric.acid), data = df) +
   geom_point(aes(color = quality_grouped), stat = 'summary', fun.y = mean)
 ```
 
-```{r echo=FALSE, _citric_acid_summary}
+```{r echo=FALSE, citric_acid_summary}
 summary(df$citric.acid)
 summary(df$alcohol)
 ```
@@ -848,7 +843,7 @@ It can be clearly seen that high quality wines mostly have more that median citr
 Nearly none of the high quality wine producers produced wines with low citric acid values.
 
 
-```{r echo=FALSE, Multivariate_alcohol_citric_acid_1}
+```{r echo=FALSE, Multivariate_alcohol_Va_1}
 df$alcohol_grouped <- cut(df$alcohol, c(7.99,9.50,10.50, 11.50, 14.20))
 
 ggplot(aes(x = volatile.acidity, y = quality), data =df) +
@@ -859,16 +854,16 @@ ggplot(aes(x = volatile.acidity, y = quality), data =df) +
 The graph implies that high quality wines have high level alcohol and low level volatile acidity. An important implication is that the quality difference coditional on alcohol becomes more significant when volitile acidity increases.
 
 
-```{r echo=FALSE, Multivariate_alcohol_citric_acid_1}
+```{r echo=FALSE, Multivariate_quality_cholorides_1}
 
 ggplot(aes(x = chlorides, y = quality), data =df) +
   xlim(0,quantile(df$chlorides,0.99)) +
-  geom_point(aes(color = alcohol_grouped), stat = 'summary', fun.y = mean, alpha =0.8) 
+  geom_point(aes(color = alcohol_grouped), stat = 'summary', fun.y = mean, alpha =0.7) 
 ```
 
 There exist a negative relationship between quality and cholorides. Low cholorides and high alcohol level shows a good quality measure.
 
-```{r echo=FALSE, Multivariate_alcohol_citric_acid_1}
+```{r echo=FALSE, Multivariate_total_sulfur_quality_1}
 
 ggplot(aes(x = total.sulfur.dioxide, y = quality), data =df) +
   xlim(quantile(df$total.sulfur.dioxide, 0.01), quantile(df$total.sulfur.dioxide, 0.99)) +
@@ -879,7 +874,7 @@ High quality wines are generally cumulated below total.sulfur.dioxide value of 1
 
 
 
-```{r echo=FALSE, Multivariate_alcohol_citric_acid_1}
+```{r echo=FALSE, Multivariate_alcohol_grouped_Va_Boxplot1}
 
 ggplot(aes(x = alcohol_grouped , y = volatile.acidity), data =df) +
   geom_boxplot() 
@@ -918,35 +913,64 @@ make sure you justify why you chose each plot by describing what it shows.
 
 ### Plot One
 ```{r echo=FALSE, Plot_One}
-
+ggplot(aes(x = alcohol, y = quality), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0), color = 'orange') + 
+  xlim(quantile(df$alcohol, 0.01), quantile(df$alcohol,0.99)) +
+  geom_line(stat = 'summary', fun.y = mean) + 
+  geom_smooth() + ggtitle('Alcohol Wine Quality Graph') + labs(x = " alcohol (% by volume)", y = "quality (score between 0 and 10)")
 ```
 
+```{r echo=FALSE, Bivariate_Alcohol_Plot1}
+ggplot(aes(x = quality, y = alcohol), data = df) + geom_boxplot(aes(group = quality)) + ggtitle('Alcohol Wine Quality Box Plot') + labs(x = " alcohol (% by volume)", y = "quality (score between 0 and 10)")
+```
+
+
 ### Description One
+Alcohol and quality has a positive relationship (after quality of 5) and the relationship is very close to linear. Although there exist fewer data points, there exist a negative relationship between quality values of 3 to 5. However, when extremes are trimmed as in the first graph, it is easier to observe the trend.
 
 
 ### Plot Two
 ```{r echo=FALSE, Plot_Two}
+df$alcohol_grouped <- cut(df$alcohol, c(7.99,9.50,10.50, 11.50, 14.20))
 
+ggplot(aes(x = volatile.acidity, y = quality), data =df) +
+  geom_line(aes(color = alcohol_grouped), stat = 'summary', fun.y = mean, alpha =0.8) + ggtitle('Wine Quality Volatile Acidity by Alcohol Graph') + labs(x = "volatile acidity (acetic acid - g / dm^3)", y = "quality (score between 0 and 10)")
 ```
 
+
+
 ### Description Two
+The graph shows that there exist a negative relationship betwwen volitile acidity and quality. We can also observe that high quality wines include high alcohol level. Furthermore, it can be seen that the seperation of alcohol in high volatile acidity increases. 
 
 
 ### Plot Three
 ```{r echo=FALSE, Plot_Three}
-
+ggplot(aes(x = alcohol, y = residual.sugar), data = df) + geom_point(alpha = 0.1, position = position_jitter(h=0), color = 'orange')  +
+  ylim(0, quantile(df$residual.sugar,0.95)) +
+  coord_trans(y = 'sqrt') +
+  geom_line(stat = 'summary', fun.y = mean) +
+  geom_smooth()  + ggtitle('Alcohol Residual Sugar Graph') + 
+  labs(x = "alcohol (% by volume)", y = "redidual sugar (g / dm^3)")
 ```
 
+
 ### Description Three
+
+The negative relationship between alcohol and residual sugar is deteched. Although the variance is quite high, the smoothing curve shows the average residual sugar by alcohol. It is interesting to see that residual.sugar decreased by increasing alcohol significantly. 
+
 
 ------
 
 # Reflection
+This analysis is conducted to explore the features in white wines and their relationships and interactions among them. The main purpose was to investigate the feature values in high quality and low quality wines. This study helped me to extract the main features of high quality and low quality wines. The middle quality wines generally do not have significant extreme values. Rather, the data points for the high quality wines are dispersed all over the graph.
 
-> **Tip**: Here's the final step! Reflect on the exploration you performed and
-the insights you found. What were some of the struggles that you went through?
-What went well? What was surprising? Make sure you include an insight into
-future work that could be done with the dataset.
+The multivariate analysis and grouping quality values helped me to see the data clusters easily. 
 
-> **Tip**: Don't forget to remove this, and the other **Tip** sections before
-saving your final work and knitting the final report!
+Box-plots of features by quality values helped to detect small differences among groups which were impossible to detect through line and point graphs. For instance, citric acid value was significantly high for Quality-9 wines. I could not see it in line graph easily.
+
+Some limitations made the interpretations more difficult. The 10-point scale may be an important limitation. The difference between the wine types are squeezed between quality 3 and quality 9.
+There were no 10 point wine and not 1 or 2 point wines which made the most wines middle quality. This may be either due to rater bias and floor and ceiling effect.
+
+# References
+
+Udacity Resources
+https://www.tidyverse.org
